@@ -1,0 +1,48 @@
+
+
+### 1. Prerequisites and Access
+
+Before starting your queries, ensure your environment is active.
+
+- **Environment:** You should have **Docker Compose** running with both `pgdatabase` and `pgAdmin` services.
+- **Interface:** Access the pgAdmin interface at **http://localhost:8085/browser/**.
+- **Troubleshooting:** If a newly created table does not appear in the interface, **Right Click** on the server or database and select **Refresh**.
+
+### 2. Mastering Table Joins
+
+Joins allow you to combine the taxi trip data with the zones lookup table to make the data human-readable.
+
+- **Inner Joins:** This is used to return records that have matching values in both tables.
+    - **Implicit Join:** Uses a comma to separate tables and a `WHERE` clause to define the relationship.
+    - **Explicit Join:** Uses the `JOIN` keyword. In PostgreSQL, writing **`JOIN` is interpreted implicitly as an `INNER JOIN`**.
+- **Outer Joins:** These are used when some data might be missing from one of the tables.
+    - **LEFT JOIN:** Returns all records from the left table and matched records from the right; if no match exists, the result is NULL.
+    - **RIGHT JOIN:** Returns all records from the right table even if there are no matches in the left.
+    - **OUTER JOIN:** Provides a full set of records from both tables, filling in NULLs where matches are missing.
+
+### 3. Data Quality Checks
+
+As a Data Engineer, verifying the integrity of your data is critical before it moves further down the pipeline.
+
+- **Checking for NULLs:** Use `IS NULL` to identify records where mandatory fields, like Location IDs, are missing.
+- **Referential Integrity:** You can check for "orphaned" records (IDs that exist in the trip data but are missing from the zones lookup table) using a subquery with the **`NOT IN`** operator.
+
+### 4. Aggregations and Transformations
+
+Transforming raw timestamps into meaningful metrics is a core task in data processing.
+
+- **Type Casting:** Use `CAST(column AS DATE)` to convert detailed timestamps into a simple date format for daily reporting.
+- **GROUP BY:** This clause collapses multiple rows into summary rows. You can calculate the **number of trips per day** using `COUNT(1)` combined with a grouped date.
+- **Common Aggregations:** Beyond counting, you can use `MAX()` to find the highest `total_amount` or `passenger_count` within a specific group.
+
+### 5. Organizing Results
+
+- **ORDER BY:** Once data is aggregated, use `ASC` (ascending) or `DESC` (descending) to sort your results, such as viewing the days with the highest trip counts first.
+- **Shorthand Grouping:** For efficiency, you can use **numeric references** in your `GROUP BY` clause (e.g., `GROUP BY 1, 2`) to refer to the first and second columns selected in your query.
+- **Multi-Field Sorting:** You can refine your output by ordering by multiple criteria, such as sorting first by date and then by Location ID.
+
+### 6. Pro-Tips for SQL in Data Engineering
+
+- **Aliasing:** Always use table aliases (like `t` for `yellow_taxi_trips` and `zpu` for `zones`) to keep your join queries readable and concise.
+- **String Manipulation:** Use the **`CONCAT`** function to merge fields like "Borough" and "Zone" into a single, descriptive column for better reporting.
+- **Limit your output:** When testing new queries on large datasets, always use the **`LIMIT`** clause (e.g., `LIMIT 100`) to prevent overwhelming your interface with data.
