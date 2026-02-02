@@ -1,0 +1,17 @@
+# Data files - DO NOT COMMIT
+*.csv
+*.csv.gz
+Data/
+screenshots/*.csv
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints
+
+code/service-account.json
+
+
+
